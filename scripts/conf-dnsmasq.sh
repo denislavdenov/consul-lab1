@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # install dnsmasq
+which dnsmasq || {
 apt-get install dnsmasq -y
+}
 cat << EOF > /etc/dnsmasq.d/10-consul
 server=/consul/127.0.0.1#8600
 EOF

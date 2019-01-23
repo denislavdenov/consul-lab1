@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     nginx2.vm.box = "denislavd/nginx64"
     nginx2.vm.hostname = "client-nginx2"
     nginx2.vm.provision :shell, path: "scripts/provision.sh", env: {"CONSUL_VER" => CONSUL_VER}
-    nginx2.vm.provision :shell, path: "scripts/check_nginx2.sh"
+    nginx2.vm.provision :shell, path: "scripts/check_nginx.sh"
     nginx2.vm.network "private_network", ip: "10.10.66.12"
     nginx2.vm.network "forwarded_port", guest: 80, host: 8081
   end

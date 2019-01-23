@@ -7,6 +7,7 @@ apt-get update -y
 apt-get install nginx -y
 }
 
+var1=$(hostname)
 # Create script check
 
 cat << EOF > /usr/local/bin/check_wel.sh
@@ -22,7 +23,7 @@ cat << EOF > /cclient/.consul.d/web.json
 {
     "service": {
         "name": "web",
-        "tags": ["nginx"],
+        "tags": ["${var1}"],
         "port": 80
     },
     "checks": [
