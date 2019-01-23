@@ -7,28 +7,44 @@
 
 apt-get update -y
 apt-get install unzip socat jq dnsutils vim -y 
+set -x
 
-# Install consul
+# Install consul\
+CONSUL_VER=${CONSUL_VER}
 which consul || {
-pushd /usr/local/bin/
-wget https://releases.hashicorp.com/consul/1.4.0/consul_1.4.0_linux_amd64.zip
-unzip consul_1.4.0_linux_amd64.zip
-rm -fr consul_1.4.0_linux_amd64.zip
-popd
+echo "Determining Consul version to install ..."
+
+CHECKPOINT_URL="https://checkpoint-api.hashicorp.com/v1/check"
+if [ -z "$CURRENT_VER" ]; then
+    CURRENT_VER=$(curl -s "${CHECKPOINT_URL}"/consul | jq .current_version | tr -d '"')
+fi
+
+
+if  ! [ "$CONSUL_VER" == "$CURRENT_VER" ]; then
+    echo "THERE IS NEWER VERSION OF CONSUL: ${CURRENT_VER}"
+    echo "Install is going to proceed with the older version: ${CONSUL_VER}"
+fi
+
+if [ -f "/vagrant/pkg/consul_${CONSUL_VER}_linux_amd64.zip" ]; then
+		echo "Found Consul in /vagrant/pkg"
+else
+    echo "Fetching Consul version ${CONSUL_VER} ..."
+    mkdir -p /vagrant/pkg/
+    curl -s https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip -o /vagrant/pkg/consul_${CONSUL_VER}_linux_amd64.zip
+    if [ $? -ne 0 ]; then
+        echo "Download failed! Exiting."
+        exit 1
+    fi
+fi
+
+echo "Installing Consul version ${CONSUL_VER} ..."
+pushd /tmp
+unzip /vagrant/pkg/consul_${CONSUL_VER}_linux_amd64.zip 
+sudo chmod +x consul
+sudo mv consul /usr/local/bin/consul
+
 }
 
-# install dnsmasq
-apt-get install dnsmasq -y
-cat << EOF > /etc/dnsmasq.d/10-consul
-server=/consul/127.0.0.1#8600
-EOF
-
-sed -i -e 's/#resolv-file=/resolv-file=\/etc\/dnsmasq.d\/outside.conf/g' /etc/dnsmasq.conf
-cat << EOF > /etc/dnsmasq.d/outside.conf
-server=8.8.8.8
-EOF
-
-systemctl restart dnsmasq.service
 
 # Starting consul
 killall consul
@@ -60,3 +76,4 @@ fi
 
 sleep 5
 consul members
+set +x
