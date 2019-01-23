@@ -50,6 +50,7 @@ sudo mv consul /usr/local/bin/consul
 killall consul
 mkdir -p /cserver/.consul.d/
 mkdir -p /cclient/.consul.d/
+mkdir -p /vagrant/logs
 
 var1=$(hostname -I | cut -f2 -d' ')
 var2=$(hostname)
@@ -61,7 +62,7 @@ if [[ "${var2}" =~ "consul-server" ]]; then
     IFACE=`route -n | awk '$1 ~ "10.10" {print $8}'`
     CIDR=`ip addr show ${IFACE} | awk '$2 ~ "10.10" {print $2}'`
     IP=${CIDR%%/24}
-    consul agent -server -ui -config-dir=/cserver/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -bootstrap-expect=$SERVER_COUNT -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /tmp/consul.log &
+    consul agent -server -ui -config-dir=/cserver/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -bootstrap-expect=$SERVER_COUNT -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
 
 else
     if [[ "${var2}" =~ "client" ]]; then
@@ -69,7 +70,7 @@ else
         IFACE=`route -n | awk '$1 ~ "10.10" {print $8}'`
         CIDR=`ip addr show ${IFACE} | awk '$2 ~ "10.10" {print $2}'`
         IP=${CIDR%%/24}
-        consul agent -ui -config-dir=/cclient/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /tmp/consul.log &
+        consul agent -ui -config-dir=/cclient/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
     fi
 fi
 
