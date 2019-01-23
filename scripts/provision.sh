@@ -51,6 +51,10 @@ killall consul
 mkdir -p /cserver/.consul.d/
 mkdir -p /cclient/.consul.d/
 mkdir -p /vagrant/logs
+LOG_LEVEL=${LOG_LEVEL}
+if [ -z "${LOG_LEVEL}" ]; then
+    LOG_LEVEL="info"
+fi
 
 var1=$(hostname -I | cut -f2 -d' ')
 var2=$(hostname)
@@ -62,12 +66,12 @@ if [[ "${var2}" =~ "consul-server" ]]; then
     killall consul
     SERVER_COUNT=${SERVER_COUNT}
     echo $SERVER_COUNT
-    consul agent -server -ui -config-dir=/cserver/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -bootstrap-expect=$SERVER_COUNT -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
+    consul agent -server -ui -config-dir=/cserver/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -log-level=${LOG_LEVEL} -enable-script-checks -bootstrap-expect=$SERVER_COUNT -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
 
 else
     if [[ "${var2}" =~ "client" ]]; then
         killall consul
-        consul agent -ui -config-dir=/cclient/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -enable-script-checks -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
+        consul agent -ui -config-dir=/cclient/.consul.d/ -bind ${IP} -client 0.0.0.0 -data-dir=/tmp/consul -log-level=${LOG_LEVEL} -enable-script-checks -node=$var2 -retry-join=10.10.56.11 -retry-join=10.10.56.12 > /vagrant/logs/$var2.log &
     fi
 fi
 
