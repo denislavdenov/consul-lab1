@@ -23,3 +23,11 @@ If you feel like customizing it before using it, here are things that are not re
 
 
 When you do `vagrant up` and provisioning finishes you can check the Consul UI at localhost:8501
+
+The recommended count of Consul servers is and odd number: 3 or 5 at best practices.
+We are using 2 in this example due to lack of RAM.
+You can modify this setting with changing the `SERVER_COUNT` value in the `Vagrantfile`
+
+You can change the value of `LOG_LEVEL` in the `Vagrantfile` which will change the log output of the servers and clients.
+This is currently set to `debug`.
+The available log levels are "trace", "debug", "info", "warn", and "err". If empty - default is "info"
