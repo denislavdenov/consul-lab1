@@ -18,7 +18,7 @@ EOF
 chmod +x /usr/local/bin/check_wel.sh
 
 # Register nginx in consul
-cat << EOF > /vagrant/client/.consul.d/web.json
+cat << EOF > /cclient/.consul.d/web.json
 {
     "service": {
         "name": "web",

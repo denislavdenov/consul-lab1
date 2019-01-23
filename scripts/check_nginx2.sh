@@ -1,7 +1,28 @@
+#!/usr/bin/env bash
+
+
+# Check for nginx
+which nginx || {
+apt-get update -y
+apt-get install nginx -y
+}
+
+# Create script check
+
+cat << EOF > /usr/local/bin/check_wel.sh
+#!/usr/bin/env bash
+
+curl localhost:80 | grep "Welcome to nginx"
+EOF
+
+chmod +x /usr/local/bin/check_wel.sh
+
+# Register nginx in consul
+cat << EOF > /cclient/.consul.d/web.json
 {
     "service": {
         "name": "web",
-        "tags": ["nginx"],
+        "tags": ["nginx2"],
         "port": 80
     },
     "checks": [
@@ -30,3 +51,7 @@
         }
     ]
 }
+EOF
+
+sleep 1
+consul reload
