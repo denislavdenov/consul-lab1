@@ -31,3 +31,5 @@ You can modify this setting with changing the `SERVER_COUNT` value in the `Vagra
 You can change the value of `LOG_LEVEL` in the `Vagrantfile` which will change the log output of the servers and clients.
 This is currently set to `debug`.
 The available log levels are "trace", "debug", "info", "warn", and "err". If empty - default is "info"
+
+You can changed the desired version of Consul by modifying `CONSUL_VER` in the `Vagrantfile`.
