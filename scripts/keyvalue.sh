@@ -35,6 +35,51 @@ curl \
     --data "@/vagrant/denislav.json"  \
     http://127.0.0.1:8500/v1/kv/denislav
 
+curl \
+    --request PUT \
+    --data '
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Welcome to client-nginx1!</title>
+    <style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+    </style>
+    </head>
+    <body>
+    <h1>Welcome to client-nginx1!</h1>
+    <p><em>Thank you for using client-nginx1.</em></p>
+    </body>
+    </html>'  \
+    http://127.0.0.1:8500/v1/kv/client-nginx1
+
+curl \
+    --request PUT \
+    --data '
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Welcome to client-nginx2!</title>
+    <style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+    </style>
+    </head>
+    <body>
+    <h1>Welcome to client-nginx2!</h1>
+    <p><em>Thank you for using client-nginx2.</em></p>
+    </body>
+    </html>'  \
+    http://127.0.0.1:8500/v1/kv/client-nginx2
+
+
 
 # Getting values from keys
 
@@ -43,7 +88,7 @@ echo $value
 
 value=`curl -sL http://127.0.0.1:8500/v1/kv/denislav | jq '.[].Value' | tr -d '"' | base64 --decode`
 echo $value
-
+value=`curl -sL http://127.0.0.1:8500/v1/kv/client-nginx1?raw`
 curl -sL http://127.0.0.1:8500/v1/kv/denislav?raw
 # Deleting key/values
 curl \

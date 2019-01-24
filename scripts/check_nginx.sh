@@ -54,5 +54,10 @@ cat << EOF > /cclient/.consul.d/web.json
 }
 EOF
 
+
+value=`curl -sL http://127.0.0.1:8500/v1/kv/${var1}?raw`
+echo $value > /var/www/html/index.nginx-debian.html
+systemctl restart nginx.service
+
 sleep 1
 consul reload
