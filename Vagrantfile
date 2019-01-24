@@ -1,10 +1,15 @@
-SERVER_COUNT = 2
+SERVER_COUNT = 3
 CONSUL_VER = "1.4.0"
 LOG_LEVEL= "debug" #The available log levels are "trace", "debug", "info", "warn", and "err". If empty - default is "info"
 
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: false
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 2
+  
+  end
   (1..SERVER_COUNT).each do |i|
     config.vm.define "consul-server#{i}" do |node|
       node.vm.box = "denislavd/xenial64"
