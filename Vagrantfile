@@ -1,7 +1,7 @@
 SERVER_COUNT = 3
 CONSUL_VER = "1.4.0"
 LOG_LEVEL= "debug" #The available log levels are "trace", "debug", "info", "warn", and "err". If empty - default is "info"
-
+ENVCONSUL_VER = "0.7.3"
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: false
@@ -32,7 +32,8 @@ Vagrant.configure("2") do |config|
     nginx.vm.box = "denislavd/nginx64"
     nginx.vm.hostname = "client-nginx1"
     nginx.vm.provision :shell, path: "scripts/provision.sh", env: {"CONSUL_VER" => CONSUL_VER, "LOG_LEVEL" => LOG_LEVEL}
-    nginx.vm.provision :shell, path: "scripts/check_nginx.sh"
+    nginx.vm.provision :shell, path: "scripts/envconsul.sh" ,env: {"ENVCONSUL_VER" => ENVCONSUL_VER}
+    nginx.vm.provision :shell, path: "scripts/envc_start.sh"
     nginx.vm.network "private_network", ip: "10.10.66.11"
     nginx.vm.network "forwarded_port", guest: 80, host: 8080
   end
@@ -40,7 +41,8 @@ Vagrant.configure("2") do |config|
     nginx2.vm.box = "denislavd/nginx64"
     nginx2.vm.hostname = "client-nginx2"
     nginx2.vm.provision :shell, path: "scripts/provision.sh", env: {"CONSUL_VER" => CONSUL_VER, "LOG_LEVEL" => LOG_LEVEL}
-    nginx2.vm.provision :shell, path: "scripts/check_nginx.sh"
+    nginx2.vm.provision :shell, path: "scripts/envconsul.sh" ,env: {"ENVCONSUL_VER" => ENVCONSUL_VER}
+    nginx2.vm.provision :shell, path: "scripts/envc_start.sh"
     nginx2.vm.network "private_network", ip: "10.10.66.12"
     nginx2.vm.network "forwarded_port", guest: 80, host: 8081
   end
