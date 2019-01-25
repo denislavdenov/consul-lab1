@@ -55,7 +55,7 @@ curl \
     <p><em>Thank you for using client-nginx1.</em></p>
     </body>
     </html>'  \
-    http://127.0.0.1:8500/v1/kv/client-nginx1
+    http://127.0.0.1:8500/v1/kv/client-nginx1/site
 
 curl \
     --request PUT \
@@ -77,7 +77,7 @@ curl \
     <p><em>Thank you for using client-nginx2.</em></p>
     </body>
     </html>'  \
-    http://127.0.0.1:8500/v1/kv/client-nginx2
+    http://127.0.0.1:8500/v1/kv/client-nginx2/site
 
 
 
@@ -88,7 +88,8 @@ echo $value
 
 value=`curl -sL http://127.0.0.1:8500/v1/kv/denislav | jq '.[].Value' | tr -d '"' | base64 --decode`
 echo $value
-value=`curl -sL http://127.0.0.1:8500/v1/kv/client-nginx1?raw`
+value=`curl -sL http://127.0.0.1:8500/v1/kv/client-nginx1/site?raw`
+echo $value
 curl -sL http://127.0.0.1:8500/v1/kv/denislav?raw
 # Deleting key/values
 curl \
