@@ -13,7 +13,7 @@ var1=$(hostname)
 cat << EOF > /usr/local/bin/check_wel.sh
 #!/usr/bin/env bash
 
-curl localhost:80 | grep "Welcome to nginx"
+curl localhost:80 | grep "Welcome to"
 EOF
 
 chmod +x /usr/local/bin/check_wel.sh
