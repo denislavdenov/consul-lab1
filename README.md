@@ -1,5 +1,5 @@
-# Example repo for using consul with 2 servers and 3 clients.
-### Both servers are using base box and they are working only as consul cluster.
+# Example repo for using consul with 3 servers and 3 clients.
+### all servers are using base box and they are working only as consul cluster.
 ### 2 of the clients are registered as web service, having nginx installed.
 ### 3rd client is configured to have DNSMASQ so we can ping consul FQDN.
 
